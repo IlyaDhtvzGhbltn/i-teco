@@ -1,0 +1,130 @@
+﻿@model List<Contracts.Contacts.Contact>
+@{
+    ViewData["Title"] = "Contacts List";
+}
+
+
+
+@if (Model == null || Model.Count == 0)
+{
+    <span>No One Contract was found. Create?</span>
+}
+else
+{
+    <nav aria-label="...">
+        <ul class="pagination">
+
+            @if (ViewBag.P.PreviousExists)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="contacts" asp-action="list" asp-route-page=@ViewBag.P.PreviousNumber>Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" asp-controller="contacts" asp-action="list" asp-route-page=@ViewBag.P.PreviousNumber>@ViewBag.P.PreviousNumber</a></li>
+            }
+
+            <li class="page-item active">
+                <span class="page-link">
+                    @ViewBag.P.Current<span class="sr-only">(current)</span>
+                </span>
+            </li>
+
+            @if (ViewBag.P.NextExists)
+            {
+                <li class="page-item"><a class="page-link" asp-controller="contacts" asp-action="list" asp-route-page=@ViewBag.P.NextNumber>@ViewBag.P.NextNumber</a></li>
+                <li class="page-item">
+                    <a class="page-link" asp-controller="contacts" asp-action="list" asp-route-page=@ViewBag.P.NextNumber>Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Active</th>
+                <th scope="col">Registration Date</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+                <th scope="col">Phone</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                string status = c.IsActive ? "Active" : "Disabled";
+                string date = c.RegistrationDate.ToString("D");
+                <tr id="@c.ID">
+                    <th>@c.ID</th>
+                    <td>@status</td>
+                    <td>@c.RegistrationDate.ToString("D")</td>
+                    <td>@c.Name</td>
+                    <td>@c.Surname</td>
+                    <td>@c.Phone</td>
+                    <td>
+                        <button type="button" class="btn btn-warning">
+                            <a class="link-light" asp-controller="Contact" asp-action="EditContact" asp-route-id="@c.ID">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                </svg>
+                                <span>Edit</span>
+                            </a>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" onclick="setAttributeToSingle('#del-contact', 'item-id', '@c.ID')" class="btn btn-danger" data-toggle="modal" data-target="#dialogModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                            <span>Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="dialogModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dialogModalLabel">Are you sure you want to delete Contact?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                All contact's data will be deleted..
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="del-contact" class="btn btn-danger"
+                        onclick="executeRequest(
+                        { 'selector' : '.progress-bar', 'attribute' : 'style', 'value' : 'width: 100%', 'after' : 'width: 0%' },
+                        [this],
+                        {
+                        'url' : `delete/${$(this).attr('item-id')}`,
+                        'method' : 'delete',
+                        'body' : null,
+                        'callbackOk' : (r) =>
+                        { $('#dialogModal').modal('hide'); showAlert('alert-success', 'Item was deleted successfully', '.alert-container'); deleteElementById($(this).attr('item-id')); },
+                        'callbackFail': (r) =>
+                        { $('#dialogModal').modal('hide'); showAlert('alert-danger', 'Something went wrong. Please try again later', '.alert-container');}
+                        })"
+                    item-id="">
+                    Delete
+                </button>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+</div>

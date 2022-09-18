@@ -1,0 +1,72 @@
+﻿@model CRMManager.Contracts.Contacts.Contact
+
+@{
+    ViewData["Title"] = "Edit Contact";
+    string activeCheched = Model.IsActive ? "checked" : "";
+    string disabledCheched = !Model.IsActive ? "checked" : "";
+}
+
+
+<div class="contact-info">
+    <h1>@Model.ID</h1>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="ContactRadios" id="enableContactRadios" value="option1" @activeCheched>
+        <label class="form-check-label" for="enableContactRadios">
+            Active
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="ContactRadios" id="disableContactRadio" value="option2" @disabledCheched>
+        <label class="form-check-label" for="disableContactRadio">
+            Disabled
+        </label>
+    </div>
+
+</div>
+
+<div class="contact-form-info">
+    <fieldset>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" value="@Model.Name" class="form-control mb-2 mr-sm-2" id="inputName" placeholder="Contact Name">
+        </div>
+        <div class="form-group">
+            <label>Surname</label>
+            <input type="text" value="@Model.Surname" class="form-control mb-2 mr-sm-2" id="inputSurname" placeholder="Contact Surname">
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            @if (Model.Phone == null)
+            {
+                <p>Contact hasn't Phone</p>
+            }
+
+            <input value="@Model.Phone" class="form-control mb-2 mr-sm-2" type="text" id="inputPhone" placeholder="+X-XXX-XXX-XX-XX">
+        </div>
+        <button type="button" item-id="@Model.ID" class="btn btn-success"
+                onclick='sendRequest(`${$(this).attr("item-id")}`,
+                "put",
+                {
+                    "IsActive": $("#enableContactRadios").prop("checked"),
+                    "Name": $("#inputName").val(),
+                    "Surname": $("#inputSurname").val(),
+                    "Phone":$("#inputPhone").val()
+                },
+                showAlert("alert-success", "Item was edited successfully", ".alert-container"),
+                showAlert("alert-danger", "Something went wrong. Please try again later", ".alert-container"))
+        '>
+            Save
+        </button>
+    </fieldset>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/imask"></script>
+
+<script>
+    var element = document.getElementById('inputPhone');
+    var maskOptions = {
+        mask: '+{0}-000-000-00-00'
+    };
+    var mask = IMask(element, maskOptions);
+</script>
