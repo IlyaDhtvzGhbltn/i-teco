@@ -47,8 +47,8 @@ namespace CRMManager.Web.Migrations
                 {
                     ID = table.Column<Guid>(nullable: false),
                     ContactID = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 255, nullable: false),
-                    Surname = table.Column<string>(maxLength: 255, nullable: false),
+                    Name = table.Column<string>(maxLength: 255, nullable: true),
+                    Surname = table.Column<string>(maxLength: 255, nullable: true),
                     BirthDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -138,12 +138,8 @@ namespace CRMManager.Web.Migrations
                 column: "ContactFormID",
                 unique: true);
 
-
             DbSeeder seeder = new DbSeeder(migrationBuilder);
             seeder.Seed();
-
-
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

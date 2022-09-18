@@ -30,10 +30,14 @@ namespace CRMManager.Web.Entities
 
         public string DeactivationReason { get; set; }
 
+        public Phone()
+        {
+
+        }
+
         public Phone(string number)
         {
             bool valid = this.Validate(number);
-            ID = Guid.NewGuid();
             if (valid)
             {
                 Number = number;

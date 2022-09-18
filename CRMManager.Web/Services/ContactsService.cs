@@ -55,36 +55,31 @@ namespace CRMManager.Web.Services
         {
             using (CRMManagerDbContext context = _dbFactory.Create())
             {
-                var contactDb = await context.Contacts
-                    .Include(x => x.ContactForm)
-                    .ThenInclude(x=>x.Phone)
-                    .FirstOrDefaultAsync( x=>x.ID == id);
-
-                if (contactDb != null)
+                try
                 {
-                    //if (contactDb.ContactForm == null) 
-                    //{
-                    //    contactDb.ContactForm = new ContactForm();
-                    //    contactDb.ContactForm.ID = Guid.NewGuid();
-                    //}
-                    //contactDb.ContactForm.Name = contact.Name;
-                    //contactDb.ContactForm.Surname = contact.Surname;
-                    //contactDb.ContactForm.Phone = new Phone(contact.Phone);
-                    //contactDb.ContactForm.Phone.ContactFormID = contactDb.ContactForm.ID;
+                    var contactDb = await context.Contacts
+                        .Include(x => x.ContactForm)
+                        .ThenInclude(x => x.Phone)
+                        .FirstOrDefaultAsync(x => x.ID == id);
+
                     contactDb.IsActive = contact.IsActive;
 
-                    try
+                    if (contactDb.ContactForm == null)
                     {
+                        contactDb.ContactForm = new ContactForm();
                         await context.SaveChangesAsync();
                     }
-                    catch (Exception ex) 
-                    {
-                        throw;
-                    }
+                    contactDb.ContactForm.Name = contact.Name;
+                    contactDb.ContactForm.Surname = contact.Surname;
+                    
+
+                    contactDb.ContactForm.Phone = new Phone(contact.Phone);
+                    await context.SaveChangesAsync();
+                    
                 }
-                else 
+                catch (Exception e) 
                 {
-                    throw new NullReferenceException("Contact not found");
+                    throw;
                 }
             }
         }

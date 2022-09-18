@@ -12,7 +12,14 @@ namespace CRMManager.Web.Extensions
 
         public static bool Validate(this Entities.Phone phone, string number)
         {
-            return _phoneNumber.IsMatch(number);
+            if (string.IsNullOrEmpty(number))
+            {
+                return true;
+            }
+            else
+            {
+                return _phoneNumber.IsMatch(number);
+            }
         }
     }
 }
