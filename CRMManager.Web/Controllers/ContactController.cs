@@ -23,12 +23,12 @@ namespace CRMManager.Web.Controllers
         public async Task<IActionResult> ContactsList(int count = 10, int page = 1)
         {
             page = page <= 0 ? 1 : page;
+            count = count > 25 ? 15 : count;
 
             var contacts = await _contactsService.GetContactsListAsync(count, page);
-            int itemsCount = await _contactsService.ItemsCountAsync();
-            Pagination p = new Pagination(itemsCount, count, page);
-            ViewBag.P = p;
+            var p = await _contactsService.GetPagination(count, page);
 
+            ViewBag.P = p;
             return View(contacts);
         }
 

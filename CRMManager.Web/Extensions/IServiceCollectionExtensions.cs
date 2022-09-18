@@ -17,6 +17,7 @@ namespace CRMManager.Web.Extensions
         {
             IFactory<CRMManagerDbContext> factory = CreateFactoryDBContext(config);
             serviceCollection.AddSingleton<IContactsService>(new ContactsService(factory));
+            serviceCollection.AddSingleton<IContactFormService>(new ContactFormService(factory));
         }
 
 

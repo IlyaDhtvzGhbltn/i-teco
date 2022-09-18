@@ -137,6 +137,13 @@ namespace CRMManager.Web.Services
             return contacts;
         }
 
+        public async Task<Pagination> GetPagination(int count, int page)
+        {
+            int totalItems = await this.ItemsCountAsync();
+            Pagination p = new Pagination(totalItems, count, page);
+            return p;
+        }
+
         public async Task<int> ItemsCountAsync()
         {
             using (CRMManagerDbContext context = _dbFactory.Create()) 
