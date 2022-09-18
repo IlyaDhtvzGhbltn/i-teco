@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace CRMManager.Web.Services.Interface
 {
-    public interface IPhoneService
+    public interface IPhoneService : IBaseService
     {
+        
     }
 }
