@@ -44,7 +44,8 @@
             <input value="@Model.Phone" class="form-control mb-2 mr-sm-2" type="text" id="inputPhone" placeholder="+X-XXX-XXX-XX-XX">
         </div>
         <button type="button" item-id="@Model.ID" class="btn btn-success"
-                onclick='sendRequest(`${$(this).attr("item-id")}`,
+                onclick='sendRequest(
+                `${$(this).attr("item-id")}`,
                 "put",
                 {
                     "IsActive": $("#enableContactRadios").prop("checked"),
@@ -52,8 +53,8 @@
                     "Surname": $("#inputSurname").val(),
                     "Phone":$("#inputPhone").val()
                 },
-                showAlert("alert-success", "Item was edited successfully", ".alert-container"),
-                showAlert("alert-danger", "Something went wrong. Please try again later", ".alert-container"))
+                (r) => showAlert("alert-success", "Item was edited successfully", ".alert-container"),
+                (r) => showAlert("alert-danger", "Something went wrong. Please try again later", ".alert-container"))
         '>
             Save
         </button>

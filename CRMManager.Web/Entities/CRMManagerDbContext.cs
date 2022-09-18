@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace CRMManager.Web.Entities
@@ -14,5 +12,13 @@ namespace CRMManager.Web.Entities
         public virtual DbSet<ContactForm> ContactForms { get; set; }
         public virtual DbSet<Phone> Phones { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
+
+
+        public CRMManagerDbContext(DbContextOptions<CRMManagerDbContext> opt) : base(opt)
+        {
+            //base.Database.EnsureDeleted();
+            var migrator = base.Database.GetService<IMigrator>();
+            migrator.Migrate();
+        }
     }
 }

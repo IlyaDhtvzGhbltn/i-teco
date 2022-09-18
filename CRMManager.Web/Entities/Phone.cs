@@ -1,11 +1,23 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
+using CRMManager.Web.Extensions;
 
 namespace CRMManager.Web.Entities
 {
     public class Phone
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid ID { get; set; }
+
+
+        [Required]
+        public Guid ContactFormID { get; set; }
+        [ForeignKey("ContactFormID")]
+        public ContactForm Contact { get; set; }
+
+
         [Required]
         [MaxLength(17)]
         [DataType(DataType.PhoneNumber)]
@@ -17,5 +29,19 @@ namespace CRMManager.Web.Entities
         public DateTime DeactivationDate { get; set; }
 
         public string DeactivationReason { get; set; }
+
+        public Phone(string number)
+        {
+            bool valid = this.Validate(number);
+            ID = Guid.NewGuid();
+            if (valid)
+            {
+                Number = number;
+            }
+            else 
+            {
+                throw new ArgumentException("Invalid phone number");
+            }
+        }
     }
 }

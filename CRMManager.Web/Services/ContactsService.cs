@@ -62,15 +62,15 @@ namespace CRMManager.Web.Services
 
                 if (contactDb != null)
                 {
-                    if (contactDb.ContactForm == null) 
-                    {
-                        contactDb.ContactForm = new ContactForm();
-                        contactDb.ContactForm.ID = Guid.NewGuid();
-                    }
-                    contactDb.ContactForm.Name = contact.Name;
-                    contactDb.ContactForm.Surname = contact.Surname;
-                    contactDb.ContactForm.Phone = new Phone(contact.Phone);
-                    contactDb.ContactForm.Phone.ContactFormID = contactDb.ContactForm.ID;
+                    //if (contactDb.ContactForm == null) 
+                    //{
+                    //    contactDb.ContactForm = new ContactForm();
+                    //    contactDb.ContactForm.ID = Guid.NewGuid();
+                    //}
+                    //contactDb.ContactForm.Name = contact.Name;
+                    //contactDb.ContactForm.Surname = contact.Surname;
+                    //contactDb.ContactForm.Phone = new Phone(contact.Phone);
+                    //contactDb.ContactForm.Phone.ContactFormID = contactDb.ContactForm.ID;
                     contactDb.IsActive = contact.IsActive;
 
                     try
